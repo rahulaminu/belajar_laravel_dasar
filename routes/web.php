@@ -14,8 +14,8 @@ Route::get('/about', function () {
 });
 Route::get('/posts', function () {
     // $posts = Post::with(['author', 'category'])->latest()->get();
-    $posts = Post::latest()->get();
-    return view('posts', ['title' => 'Blog', 'posts' => $posts]);
+    // $posts = Post::latest()->get();
+    return view('posts', ['title' => 'Blog', 'posts' => Post::filter(request(['search', 'category']))->latest()->get()]);
 });
 
 Route::get('/posts/{post:slug}', function (Post $post) {
@@ -30,7 +30,7 @@ Route::get('/authors/{user:username}', function (User $user) {
 
 Route::get('/categories/{category:slug}', function (Category $category) {
     // $posts = $category->posts->load('author', 'category'); lazy eager loading
-    return view('posts', ['title' => ' Articles in Category: ' . $category->name, 'posts' => $category->posts]);
+    return view('posts', ['title' => count($category->posts) . ' Articles in Category : ' . $category->name, 'posts' => $category->posts]);
 });
 
 Route::get('/contact', function () {
